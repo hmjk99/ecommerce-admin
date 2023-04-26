@@ -6,6 +6,7 @@ export default function Categories() {
     const [name, setName] = useState('')
     const [parentCategory, setParentCategory] = useState('')
     const [categories, setCategories] = useState([])
+    const [properties, setProperties] = useState([])
     const [editedCategory, setEditedCategory] = useState(null)
     const [deleteCategory, setDeleteCategory] = useState(null)
     const [displayDelete, setDisplayDelete] = useState(false) 
@@ -44,6 +45,11 @@ export default function Categories() {
         })
         hideDelete()
     }
+    const addProperty = () =>{
+        setProperties(prev =>{
+            return [...prev, {name:'', values:''}]
+        })
+    }
 
     useEffect(()=>{
         getCategory()
@@ -53,14 +59,20 @@ export default function Categories() {
         <Layout>
             <h1>Categories</h1>
             <label>{editedCategory ? `Edit Category "${editedCategory.name}"` : 'Create Category'}</label>
-            <form className="flex gap-1" onSubmit={saveCategory}>
-                <input className="mb-0" type="text" placeholder={'Category name'} value={name} onChange={e => setName(e.target.value)}/>
-                <select className="mb-0" value={parentCategory} onChange={e => setParentCategory(e.target.value)}>
-                    <option value="">No Parent Category</option>
-                    {categories.length > 0 && categories.map(category =>(
-                        <option value={category._id}>{category.name}</option>
-                    ))}
-                </select>
+            <form onSubmit={saveCategory}>
+                <div className="flex gap-1">
+                    <input type="text" placeholder={'Category name'} value={name} onChange={e => setName(e.target.value)}/>
+                    <select value={parentCategory} onChange={e => setParentCategory(e.target.value)}>
+                        <option value="">No Parent Category</option>
+                        {categories.length > 0 && categories.map(category =>(
+                            <option value={category._id}>{category.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="mb-2">
+                    <label className="block">Properties</label>
+                    <button onClick={addProperty} type="button" className="btn-default text-sm">Add New Property</button>
+                </div>
                 <button type="submit" className="btn-primary">Save</button>
             </form>
             {displayDelete ? 

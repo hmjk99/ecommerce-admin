@@ -1,5 +1,5 @@
 
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 
@@ -9,16 +9,25 @@ export default function ProductForm({
     description:existingDescription,
     price:existingPrice,
     images:existingImages,
+    category:existingCategory,
 }) {
     const [title, setTitle] = useState(existingTitle || '')
     const [description, setDescription] = useState(existingDescription || '')
     const [price, setPrice] = useState(existingPrice || '')
     const [images, setImages] = useState(existingImages || [])
+    const [category, setCategory] = useState(existingCategory || '')
+    const [categories, setCategories] = useState([])
     const [goToProducts, setGoToProducts] = useState(false)
     const router = useRouter()
 
+    useEffect(()=>{
+        axios.get('/api/categories').then(response =>{
+            setCategories(response.data)
+        })
+    }, [])
+
     async function saveProduct(e) {
-        const data = {title,description,price,images}
+        const data = {title,description,price,images,category}
         e.preventDefault()
         if (_id){
             //update
@@ -52,6 +61,12 @@ export default function ProductForm({
         <form onSubmit={saveProduct}>
             <label>Product Name</label>
             <input type='text' placeholder='product name' value={title} onChange={e => setTitle(e.target.value)}/>
+            <select value={category} onChange={e => setCategory(e.target.value)}>
+                <option value="">Uncategorized</option>
+                {categories.length > 0 && categories.map(category =>(
+                    <option value={category._id}>{category.name}</option>
+                ))}
+            </select>
             <label>Images</label>
             <div className='mb-2 flex flex-wrap gap-2'>
                 {!!images?.length && images.map(link =>(
