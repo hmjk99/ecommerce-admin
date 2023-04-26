@@ -39,3 +39,6 @@ table.basic a{
 .btn-default{
     @apply bg-blue-600 text-white
 }
+img{
+    max-height:100%
+}
