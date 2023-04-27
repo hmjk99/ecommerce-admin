@@ -18,19 +18,35 @@ export default function Categories() {
     }
     const saveCategory = async (e) =>{
         e.preventDefault()
+        const data = {
+            name, 
+            parentCategory, 
+            properties:properties.map(p => ({
+                name:p.name, 
+                values:p.values.split(','),
+            }))
+        }
         if (editedCategory) {
-            await axios.put('/api/categories', {name, parentCategory, _id:editedCategory._id})
+            data._id = editedCategory._id, 
+            await axios.put('/api/categories', data)
+            setEditedCategory(null)
         } else{
-            await axios.post('/api/categories', {name, parentCategory})
+            await axios.post('/api/categories', data)
         }
         setName('')
         getCategory()
-        setEditedCategory(null)
+        setParentCategory('')
+        setProperties([])
     }
     const editCategory = async (category) =>{
         setEditedCategory(category)
         setName(category.name)
         setParentCategory(category.parent?._id)
+        setProperties(category.properties.map(({name, values})=>({
+            name,
+            values:values.join(',')
+        })))
+
     }
     const showDelete = async (category) =>{
         setDisplayDelete(true)
@@ -48,6 +64,27 @@ export default function Categories() {
     const addProperty = () =>{
         setProperties(prev =>{
             return [...prev, {name:'', values:''}]
+        })
+    }
+    const handlePropertyNameChange = (index, property, newName) =>{
+        setProperties(prev => {
+            const properties = [...prev]
+            properties[index].name = newName
+            return properties
+        })
+    }
+    const handlePropertyValuesChange = (index, property, newValues) =>{
+        setProperties(prev => {
+            const properties = [...prev]
+            properties[index].values = newValues
+            return properties
+        })
+    }
+    const removeProperty = (indexToRemove) =>{
+        setProperties(prev =>{
+            return [...prev].filter((p, pIndex)=>{
+                return pIndex !== indexToRemove
+            })
         })
     }
 
@@ -71,9 +108,27 @@ export default function Categories() {
                 </div>
                 <div className="mb-2">
                     <label className="block">Properties</label>
-                    <button onClick={addProperty} type="button" className="btn-default text-sm">Add New Property</button>
+                    <button onClick={addProperty} type="button" className="btn-default text-sm mb-2">Add New Property</button>
+                    {properties.length > 0 && properties.map((property,index) =>(
+                        <div className="flex gap-1 mb-2">
+                            <input className="mb-0" type="text" value={property.name} onChange={(e)=>handlePropertyNameChange(index, property, e.target.value)} placeholder="property name (example: color)"/>
+                            <input className="mb-0" type="text" value={property.values} onChange={(e)=>handlePropertyValuesChange(index, property, e.target.value)} placeholder="values, comma separated"/>
+                            <button className="btn-default" type="button" onClick={() => removeProperty(index)}>Remove</button>
+                        </div>
+                    ))}
                 </div>
-                <button type="submit" className="btn-primary">Save</button>
+                <div className="flex gap-1">
+                    {editedCategory && (
+                        <button type="button" onClick={() => {
+                            setEditedCategory(null)
+                            setName('')
+                            setParentCategory('')
+                            setProperties([])
+                        }} 
+                        className="btn-red">Cancel</button>
+                    )}
+                    <button type="submit" className="btn-primary">Save</button>
+                </div>
             </form>
             {displayDelete ? 
                 <div className="flex items-center mt-2 justify-center">
@@ -83,7 +138,8 @@ export default function Categories() {
                 </div>
                 : null
             }
-            <table className="basic mt-4">
+            {!editedCategory && (
+                <table className="basic mt-4">
                 <thead>
                     <tr>
                         <td>Category Name</td>
@@ -104,6 +160,7 @@ export default function Categories() {
                     ))}
                 </tbody>
             </table>
+            )}
         </Layout>
     )
 }

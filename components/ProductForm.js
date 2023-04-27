@@ -10,6 +10,7 @@ export default function ProductForm({
     price:existingPrice,
     images:existingImages,
     category:existingCategory,
+    properties:existingProperties
 }) {
     const [title, setTitle] = useState(existingTitle || '')
     const [description, setDescription] = useState(existingDescription || '')
@@ -17,6 +18,7 @@ export default function ProductForm({
     const [images, setImages] = useState(existingImages || [])
     const [category, setCategory] = useState(existingCategory || '')
     const [categories, setCategories] = useState([])
+    const [productProperties, setProductProperties] = useState(existingProperties || {})
     const [goToProducts, setGoToProducts] = useState(false)
     const router = useRouter()
 
@@ -27,7 +29,7 @@ export default function ProductForm({
     }, [])
 
     async function saveProduct(e) {
-        const data = {title,description,price,images,category}
+        const data = {title,description,price,images,category, properties:productProperties}
         e.preventDefault()
         if (_id){
             //update
@@ -53,6 +55,25 @@ export default function ProductForm({
         }
     }
 
+    const setProductProp = (propName,value) =>{
+        setProductProperties(prev =>{
+            const newProductProps = {...prev}
+            newProductProps[propName] = value
+            return newProductProps
+        })
+    }
+
+    const propertiesToFill = [] //watch 5:03:00 for explanation
+    if (categories.length > 0 && category) {
+        let catInfo = categories.find(({_id})=> _id === category)
+        propertiesToFill.push(...catInfo.properties)
+        while(catInfo?.parent?._id) {
+            const parentCat = categories.find(({_id})=> _id === catInfo?.parent?._id)
+            propertiesToFill.push(...parentCat.properties)
+            catInfo = parentCat
+        }
+    }
+
     if(goToProducts){
         router.push('/products')
     }
@@ -67,6 +88,16 @@ export default function ProductForm({
                     <option value={category._id}>{category.name}</option>
                 ))}
             </select>
+            {propertiesToFill.length > 0 && propertiesToFill.map(p => (
+                <div className='flex gap-1'>
+                    <div>{p.name}</div>
+                    <select value={productProperties[p.name]} onChange={(e)=> setProductProp(p.name, e.target.value)}>
+                        {p.values.map(v => (
+                            <option value={v}>{v}</option>
+                        ))}
+                    </select>
+                </div>
+            ))}
             <label>Images</label>
             <div className='mb-2 flex flex-wrap gap-2'>
                 {!!images?.length && images.map(link =>(

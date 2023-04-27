@@ -3,8 +3,12 @@ import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3'
 const bucketName = 'hmjk99-next-ecommerce'
 import mime from 'mime-types'
 import fs from 'fs'
+import { mongooseConnection } from '@/lib/mongoose'
 
 export default async function handler(req, res){
+    await mongooseConnection()
+    // await isAdminRequest(req,res)
+
     const form = new multiparty.Form()
     const {fields,files} = await new Promise((resolve,reject)=>{
         form.parse(req, (err, fields, files)=>{
