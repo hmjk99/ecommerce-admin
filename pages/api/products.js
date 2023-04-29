@@ -5,7 +5,6 @@ import {Product} from '@/models/Product'
 export default async function handle(req, res) {
     const {method} = req
     await mongooseConnection()
-    // await isAdminRequest(req,res)
 
     if (method === 'GET'){
         if (req.query?.id){
@@ -13,7 +12,6 @@ export default async function handle(req, res) {
         }else{
             res.json(await Product.find())
         }
-        
     }
     if (method === 'POST'){
         const {title,description,price,images,category,properties} = req.body

@@ -12,7 +12,7 @@ const Products = () => {
     }, [])
   return (
     <Layout>
-        <Link className='bg-blue-800 text-white rounded-md py-1 px-2' href={'/products/new'}>Add New Product</Link>
+        <Link className='bg-purple-800 text-white rounded-md py-1 px-2' href={'/products/new'}>Add New Product</Link>
         <table className='basic mt-2'>
             <thead>
                 <tr>
