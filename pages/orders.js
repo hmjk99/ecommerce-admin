@@ -23,7 +23,7 @@ export default function Orders() {
                 </thead>
                 <tbody>
                     {orders.length > 0 && orders.map(order => (
-                        <tr key={order._id}>
+                        <tr key={order.name}>
                             <td>{(new Date(order.createdAt)).toLocaleString()}</td>
                             <td>
                                 {order.name} {order.email}<br/>
