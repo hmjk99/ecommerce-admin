@@ -102,7 +102,7 @@ export default function Categories() {
                     <select value={parentCategory} onChange={e => setParentCategory(e.target.value)}>
                         <option value="">No Parent Category</option>
                         {categories.length > 0 && categories.map(category =>(
-                            <option value={category._id}>{category.name}</option>
+                            <option key={category.name} value={category._id}>{category.name}</option>
                         ))}
                     </select>
                 </div>
@@ -110,7 +110,7 @@ export default function Categories() {
                     <label className="block">Properties</label>
                     <button onClick={addProperty} type="button" className="btn-default text-sm mb-2">Add New Property</button>
                     {properties.length > 0 && properties.map((property,index) =>(
-                        <div className="flex gap-1 mb-2">
+                        <div key={property.name} className="flex gap-1 mb-2">
                             <input className="mb-0" type="text" value={property.name} onChange={(e)=>handlePropertyNameChange(index, property, e.target.value)} placeholder="property name (example: color)"/>
                             <input className="mb-0" type="text" value={property.values} onChange={(e)=>handlePropertyValuesChange(index, property, e.target.value)} placeholder="values, comma separated"/>
                             <button className="btn-default" type="button" onClick={() => removeProperty(index)}>Remove</button>
@@ -132,7 +132,7 @@ export default function Categories() {
             </form>
             {displayDelete ? 
                 <div className="flex items-center mt-2 justify-center">
-                    <h3 className="mr-4">Do you really want to delete "{deleteCategory.name}"?</h3>
+                    <h3 className="mr-4">Do you really want to delete &quot;{deleteCategory.name}&quot;?</h3>
                     <button className="btn-red mr-2" onClick={()=> handleDelete(deleteCategory._id)}>Yes</button>
                     <button className="btn-primary" onClick={hideDelete}>No</button>
                 </div>
@@ -149,7 +149,7 @@ export default function Categories() {
                 </thead>
                 <tbody>
                     {categories.length > 0 && categories.map(category =>(
-                        <tr>
+                        <tr key={category.name}>
                             <td>{category.name}</td>
                             <td>{category.parent?.name}</td>
                             <td>
