@@ -14,7 +14,7 @@ Pineapple-admin is a full-stack application that lets the admin login with their
 
 ## Demo
 
-Live link: https://ecommerce-front-hmjk99.vercel.app/
+Live link: https://ecommerce-admin-hmjk99.vercel.app/
 
 ![Alt Text](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmYwNDAwMWNiZDk5NWQ0ZDI2YTIxNDNjZTFmYTlkNWRkZmY5NmZiYSZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/ek658Qo2dBkew47l5b/giphy.gif)
 
