@@ -8,6 +8,7 @@ Pineapple-admin is a full-stack application that lets the admin login with their
 - Allows users login with their gmail account (NextAuth).
 - Simple design using TailwindCSS.
 - Full CRUD functionality for products and categories.
+- Used AWS (Amazon Web Services) S3 Bucket to hold uploaded image files. 
 - Assign parent category to each category.
 - Upload multiple images for each products.
 - Add multiple properties to each categories.
